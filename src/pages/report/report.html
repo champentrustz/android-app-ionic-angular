@@ -1,0 +1,97 @@
+<!--
+  Generated template for the ReportPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>
+    รายงาน
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+
+  </ion-refresher>
+
+
+  <ion-item>
+    <ion-label>วันที่</ion-label>
+    <ion-datetime displayFormat="DD-MM-YYYY" pickerFormat="DD-MM-YYYY"   [(ngModel)]="dateSearch" (ionChange)="changeDate(dateSearch)" cancelText="ยกเลิก" doneText="ตกลง"></ion-datetime>
+  </ion-item>
+
+  <h5 ion-text color="danger" *ngIf="status == 0" text-center>ไม่มีการบันทึกข้อมูล</h5>
+
+  <ion-list *ngIf="status == 1">
+
+    <br>
+
+
+
+
+    <ion-item *ngFor="let data of dataStudent,let i = index" (click)="searchStudent(data.tb_student_code)">
+
+
+
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/student/{{data.tb_student_code}}.jpg" style="width:60px;height:78px">
+      </ion-thumbnail>
+      <ion-label>
+        <h2 ion-text color="primary">
+          {{data.tb_student_name}} {{data.tb_student_sname}}
+        </h2>
+        <p>รหัสนักเรียน : {{data.tb_student_code}}</p>
+        <p *ngIf="data.tb_time_type == 1">สถานะ : มาเรียน</p>
+        <p *ngIf="data.tb_time_type == 5">สถานะ : <span style="color: red">ขาดเรียน</span></p>
+        <p *ngIf="data.tb_time_type == 4">สถานะ : <span style="color: red">ลาป่วย</span></p>
+        <p *ngIf="data.tb_time_type == 6">สถานะ : <span style="color: red">ลากิจ</span></p>
+        <p *ngIf="data.tb_time_type == 7">สถานะ : <span style="color: red">กิจกรรม</span></p>
+      </ion-label>
+
+
+
+    </ion-item>
+
+
+      <ion-card>
+        <ion-card-content>
+    <ion-row>
+      <ion-col col-6 push-1>
+        <h2 text-right>นักเรียนทั้งหมด : </h2>
+      </ion-col>
+      <ion-col col-4 push-1>
+        <h2><ion-badge item-end color="primary">{{numStudent}}</ion-badge></h2>
+      </ion-col>
+    </ion-row>
+          <ion-row>
+            <ion-col col-6 push-1>
+              <h2 text-right>มาโรงเรียน : </h2>
+            </ion-col>
+            <ion-col col-4 push-1>
+              <h2><ion-badge item-end color="secondary">{{present}}</ion-badge></h2>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-6 push-1>
+              <h2 text-right>ไม่มาโรงเรียน : </h2>
+            </ion-col>
+            <ion-col col-4 push-1>
+              <h2><ion-badge item-end color="danger">{{absent}}</ion-badge></h2>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+
+  </ion-list>
+
+
+
+
+</ion-content>

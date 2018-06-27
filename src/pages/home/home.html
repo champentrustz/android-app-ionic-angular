@@ -1,14 +1,78 @@
-<ion-header>
-  <ion-navbar>
+
+<ion-header >
+  <ion-navbar >
     <ion-title>
-      Ionic Blank
+      <img  style="margin-top: 10px" src="assets/imgs/header.png">
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+
+  </ion-refresher>
+
+  <ion-item text-center>
+    ประจำวัน{{dateFull}}
+
+  </ion-item>
+
+  <ion-list *ngFor="let status of teacherCheck" text-center>
+
+    <h5 ion-text color="secondary" *ngIf="status.teacher_check == true" style="margin-top: 30px">บันทึกแล้ว<p ion-text color="primary">โดย {{status.teacher_name}}</p></h5>
+    <h5 ion-text color="danger" *ngIf="status.teacher_check == false" style="margin-top: 30px">ยังไม่ได้บันทึก</h5>
+  </ion-list>
+
+  <ion-list >
+    <ion-item *ngFor="let data of dataStudent,let i = index">
+
+      <ion-thumbnail item-start>
+        <img src="assets/imgs/student/{{data.tb_student_code}}.jpg" style="width:60px;height:78px">
+      </ion-thumbnail>
+      <ion-label>
+        <h2 ion-text color="primary">
+       {{data.tb_student_name}} {{data.tb_student_sname}}
+      </h2>
+        <p>รหัสนักเรียน : {{data.tb_student_code}}</p>
+      </ion-label>
+
+      <ion-select [(ngModel)]="data.tb_time_type" style="font-size: 15px" interface="popover" *ngIf="data.tb_time_type != 1" ion-text color="danger">
+        <ion-option value="1">มาเรียน</ion-option>
+        <ion-option value="5">ขาดเรียน</ion-option>
+        <ion-option value="4">ลาป่วย</ion-option>
+        <ion-option value="6">ลากิจ</ion-option>
+        <ion-option value="7">กิจกรรม</ion-option>
+      </ion-select>
+
+      <ion-select [(ngModel)]="data.tb_time_type" style="font-size: 15px" interface="popover" *ngIf="data.tb_time_type == 1">
+        <ion-option value="1">มาเรียน</ion-option>
+        <ion-option value="5">ขาดเรียน</ion-option>
+        <ion-option value="4">ลาป่วย</ion-option>
+        <ion-option value="6">ลากิจ</ion-option>
+        <ion-option value="7">กิจกรรม</ion-option>
+      </ion-select>
+
+
+    </ion-item>
+  </ion-list>
+
+
+
+
+
+
+
+
 </ion-content>
+
+<ion-footer padding style="height: 80px">
+  <div style="margin-bottom: 70px">
+  <button (click)="loadCheck()" ion-button block icon-left >บันทึกข้อมูล</button>
+  </div>
+</ion-footer>
+
+
+
+
+

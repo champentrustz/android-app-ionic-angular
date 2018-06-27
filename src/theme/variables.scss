@@ -84,5 +84,23 @@ $colors: (
 // Fonts
 // --------------------------------------------------
 
-@import "roboto";
-@import "noto-sans";
+//@import "roboto";
+//@import "noto-sans";
+
+
+
+
+//@font-face {
+//  font-family: 'Athiti';
+//  src: url('../assets/Athiti2.woff2') format('woff2');
+//  font-weight: normal;
+//  font-style: normal;
+//}
+
+@import url('https://fonts.googleapis.com/css?family=Athiti');
+
+*{
+  font-family: 'Athiti', sans-serif;
+}
+
+

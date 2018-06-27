@@ -1,0 +1,224 @@
+<!--
+  Generated template for the SearchPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>ค้นหา</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+
+  </ion-refresher>
+
+  <ion-item>
+    <ion-label floating>รหัสนักเรียน</ion-label>
+    <ion-input type="number" [(ngModel)]="studentCode" [ngModelOptions]="{standalone: true}" [min]="1"></ion-input>
+  </ion-item>
+
+  <span *ngIf="status === 'blank'">
+        <ion-label ion-text color="danger" text-center>กรุณากรอกรหัสนักเรียน</ion-label>
+  </span>
+  <span *ngIf="status === 'no-match'">
+        <ion-label ion-text color="danger" text-center>ไม่มีรหัสนักเรียนนี้ในระบบ</ion-label>
+  </span>
+
+  <div padding>
+
+    <button (click)="searchStudent()" ion-button block>ค้นหา</button>
+
+  </div>
+
+
+
+<div *ngFor="let student of dataStudent">
+    <ion-item-group >
+
+      <ion-item-divider color="light">ข้อมูลนักเรียน</ion-item-divider>
+
+      <ion-col push-1>
+    <ion-item  *ngFor="let studentData of student.data" >
+
+
+    <ion-avatar item-start>
+      <img  src="assets/imgs/student/{{studentData.tb_student_code}}.jpg" style="width: 60px;height: 70px;">
+    </ion-avatar>
+    <h2 ion-text color="primary">{{studentData.tb_student_name}} {{studentData.tb_student_sname}}</h2>
+    <p>รหัสนักเรียน : {{studentData.tb_student_code}}</p>
+    <p>ชั้น : {{studentData.tb_room_name}}</p>
+    <!--<p style="font-size: 12px;">{{teacher.position_name}}</p>-->
+    <!--<p style="font-size: 12px;">{{teacher.department_name}}</p>-->
+
+
+    </ion-item>
+      </ion-col>
+
+
+    </ion-item-group>
+
+
+
+  <ion-item-group >
+    <hr>
+    <ion-item-divider>
+
+      <ion-label>ภาคการศึกษา</ion-label>
+      <ion-select [(ngModel)]="semesterSelect" interface="popover" (ionChange)="changeSemester(semesterSelect)">
+        <ion-option *ngFor="let data of semester" [value]="data">{{data}}</ion-option>
+      </ion-select>
+
+    </ion-item-divider>
+
+    <ion-item-divider color="light">ข้อมูลการไม่มาโรงเรียน</ion-item-divider>
+
+    <!-- Header -->
+
+
+    <div *ngIf="student.time_absent.length > 0">
+
+      <ion-item>
+        <ion-row padding>
+          <ion-col text-center>
+            <strong>วันที่</strong>
+          </ion-col>
+          <ion-col text-center>
+            <strong>สถานะ</strong>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item *ngFor="let studentTimeAbsent of student.time_absent">
+
+        <ion-row>
+          <ion-col text-center>
+            <h5>
+            <label>{{convertDate(studentTimeAbsent.tb_time_date)}}</label>
+            </h5>
+          </ion-col>
+          <ion-col text-center>
+            <h5>
+            <label *ngIf="studentTimeAbsent.tb_time_type == 5" ion-text color="danger">ขาดเรียน</label>
+            <label *ngIf="studentTimeAbsent.tb_time_type == 4" ion-text color="danger">ลาป่วย</label>
+            <label *ngIf="studentTimeAbsent.tb_time_type == 6" ion-text color="danger">ลากิจ</label>
+            <label *ngIf="studentTimeAbsent.tb_time_type == 7" ion-text color="danger">กิจกรรม</label>
+            </h5>
+          </ion-col>
+        </ion-row>
+
+
+      <!--<p style="font-size: 12px;">{{teacher.position_name}}</p>-->
+      <!--<p style="font-size: 12px;">{{teacher.department_name}}</p>-->
+      </ion-item>
+
+    </div>
+    <div *ngIf="student.time_absent.length <= 0">
+      <ion-item text-center>
+        <h5 ion-text color="danger">ไม่พบข้อมูล</h5>
+      </ion-item>
+    </div>
+  </ion-item-group>
+
+  <ion-item-group >
+
+    <ion-item-divider color="light">ข้อมูลการมาโรงเรียนสาย</ion-item-divider>
+    <div *ngIf="student.time_late.length > 0">
+
+      <ion-item>
+        <ion-row padding>
+          <ion-col text-center>
+            <strong>วันที่</strong>
+          </ion-col>
+          <ion-col text-center>
+            <strong>เหตุผล</strong>
+          </ion-col>
+          <ion-col text-center>
+            <strong>เวลา</strong>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item  *ngFor="let studentTimeLate of student.time_late" >
+
+
+        <ion-row>
+          <ion-col text-center>
+            <label><h5>{{convertDate(studentTimeLate.tb_time_date)}}</h5></label>
+          </ion-col>
+          <ion-col text-center>
+            <label *ngIf="studentTimeLate.tb_time_reason != ''"><h5>{{studentTimeLate.tb_time_reason}}</h5></label>
+            <label *ngIf="studentTimeLate.tb_time_reason == ''"><h5>-</h5></label>
+          </ion-col>
+          <ion-col text-center>
+            <label><h5>{{studentTimeLate.tb_time_time}}</h5></label>
+          </ion-col>
+        </ion-row>
+
+      </ion-item>
+
+    </div>
+    <div *ngIf="student.time_late.length <= 0">
+      <ion-item text-center>
+        <h5 ion-text color="danger">ไม่พบข้อมูล</h5>
+      </ion-item>
+    </div>
+  </ion-item-group>
+
+  <ion-item-group >
+
+    <ion-item-divider color="light">ข้อมูลการตัดคะแนน</ion-item-divider>
+
+    <div *ngIf="student.rule.length > 0">
+
+      <ion-item>
+        <ion-row padding>
+          <ion-col text-center>
+            <strong>วันที่</strong>
+          </ion-col>
+          <ion-col text-center>
+            <strong>พฤติกรรม</strong>
+          </ion-col>
+          <ion-col text-center>
+            <strong>คะแนนที่ถูกตัด</strong>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+
+      <ion-item  *ngFor="let studentRule of student.rule" >
+
+
+        <ion-row>
+          <ion-col text-center>
+            <label><h5>{{convertDate(studentRule.tb_rule_date)}}</h5></label>
+          </ion-col>
+          <ion-col text-center>
+            <label><h5>{{studentRule.tb_ruletype_name}}</h5></label>
+          </ion-col>
+          <ion-col text-center>
+            <label><h5 ion-text color="danger">{{studentRule.tb_rule_score}}</h5></label>
+          </ion-col>
+        </ion-row>
+
+      </ion-item>
+
+    </div>
+    <div *ngIf="student.rule.length <= 0">
+      <ion-item text-center>
+        <h5 ion-text color="danger">ไม่พบข้อมูล</h5>
+      </ion-item>
+    </div>
+  </ion-item-group>
+
+</div>
+
+
+
+
+</ion-content>
